@@ -1,0 +1,16 @@
+POST http://localhost:8000/products
+Content-Type: application/json
+
+{
+  "name": "iPhone 15 Pro",
+  "description": "Smartphone premium con chip A17 Pro y cámara de 48MP",
+  "model": "A3108",
+  "sale_price": 1199,
+  "purchase_price": 899,
+  "image": "images/products/iphone_15_pro.jpg",
+  "category_id": 1,
+  "brand_id": 1,
+}
+
+###
+GET http://localhost:8000/products
