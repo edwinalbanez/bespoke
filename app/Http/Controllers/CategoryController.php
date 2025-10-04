@@ -71,7 +71,7 @@ class CategoryController extends Controller
         error_log('Error loading category: ' . $th->getMessage());
         return redirect()
           ->back()
-          ->with('error', 'It was not possible to load the information.');
+          ->with('error', 'Information not available');
       }
     }
     /**

@@ -91,7 +91,7 @@ export default function Create() {
                         <Button type="submit" disabled={processing}>
                           Create
                         </Button>
-                        <Link href={index.url()} prefetch={'click'}>
+                        <Link href={index.url()} prefetch>
                           <Button variant={'secondary'} disabled={processing} className='w-full'>
                             See categories
                           </Button>

@@ -1,6 +1,6 @@
 import AppLayout from '@/layouts/app-layout';
 import { type BreadcrumbItem } from '@/types';
-import { Head } from '@inertiajs/react';
+import { Head, usePage } from '@inertiajs/react';
 import { Link } from '@inertiajs/react';
 import { create, edit } from '@/actions/App/Http/Controllers/CategoryController';
 import {
@@ -12,6 +12,8 @@ import {
   TableRow,
 } from "@/components/ui/table"
 import { Button } from '@/components/ui/button';
+import { useEffect } from 'react';
+import showToast from '../../lib/toasts';
 
 const breadcrumbs: BreadcrumbItem[] = [
   {
@@ -20,6 +22,11 @@ const breadcrumbs: BreadcrumbItem[] = [
   },
 ];
 
+interface FlashMessages {
+  success?: string;
+  error?: string;
+}
+
 interface Category {
   id: number,
   name: string,
@@ -27,7 +34,20 @@ interface Category {
 }
 
 export default function Index({ categories }: {categories: Category[]}) {
+
+  categories.push({id: 10000, name: 'nosedcdwcd', description: 'omar'})
   
+  const flash = usePage().props.flash as FlashMessages;
+
+  useEffect(() => {
+    if (flash?.success) {
+      showToast.success(flash.success);
+    }
+    if (flash?.error) {
+      showToast.error(flash.error, 'An error ocurred');
+    }
+  }, [flash]);
+
   return (
     <AppLayout breadcrumbs={breadcrumbs}>
       <Head title="Dashboard" />
