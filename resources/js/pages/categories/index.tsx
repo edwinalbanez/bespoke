@@ -2,7 +2,7 @@ import AppLayout from '@/layouts/app-layout';
 import { type BreadcrumbItem } from '@/types';
 import { Head } from '@inertiajs/react';
 import { Link } from '@inertiajs/react';
-import { create } from '@/actions/App/Http/Controllers/CategoryController';
+import { create, edit } from '@/actions/App/Http/Controllers/CategoryController';
 import {
   Table,
   TableBody,
@@ -54,9 +54,12 @@ export default function Index({ categories }: {categories: Category[]}) {
               </TableCell>
               <TableCell className="font-medium">
                 <div className='flex gap-3'>
-                  <Button>
-                    Edit
-                  </Button>
+                  <Link href={edit(category.id)}>
+                    <Button>
+                      Edit
+                    </Button>
+                  </Link>
+                  
                   <Button variant={'destructive'}>
                     Delete
                   </Button>

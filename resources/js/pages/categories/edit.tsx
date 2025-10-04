@@ -1,8 +1,8 @@
 import AppLayout from '@/layouts/app-layout';
 import { type BreadcrumbItem } from '@/types';
-import { Head, Link, usePage } from '@inertiajs/react';
-import { index, create, store } from '@/actions/App/Http/Controllers/CategoryController';
-import { Form } from '@inertiajs/react';
+import { Head, usePage } from '@inertiajs/react';
+import { index, edit, update } from '@/actions/App/Http/Controllers/CategoryController';
+import { Form } from '@inertiajs/react'
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from '@/components/ui/button';
@@ -17,17 +17,23 @@ const breadcrumbs: BreadcrumbItem[] = [
     href: index.url()
   },
   {
-    title: 'Create',
-    href: create.url(),
+    title: 'Edit',
+    href: '',
   },
 ];
+
+interface Category {
+  id: number,
+  name: string,
+  description: string
+}
 
 interface FlashMessages {
   success?: string;
   error?: string;
 }
 
-export default function Create() {
+export default function Edit({ category }: { category: Category}) {  
   const flash = usePage().props.flash as FlashMessages;
   
   useEffect(() => {
@@ -39,11 +45,13 @@ export default function Create() {
     }
   }, [flash]);
 
+  breadcrumbs[1].href = edit.url(category.id);
+
   return (
     <AppLayout breadcrumbs={breadcrumbs}>
       <Head title="Dashboard" />
       <div className="flex h-full flex-1 flex-col gap-4 overflow-x-auto rounded-xl p-4">
-        <Form action={store()} resetOnSuccess >
+        <Form action={update(category.id)} resetOnSuccess >
           {
             ({
               errors,
@@ -52,7 +60,7 @@ export default function Create() {
               <div className="flex flex-col max-w-sm gap-6 mx-auto">
                 <Card>
                   <CardHeader>
-                    <CardTitle className='text-2xl'>New category</CardTitle>
+                    <CardTitle className='text-2xl'>Edit category</CardTitle>
                   </CardHeader>
                   <CardContent>
                     <div className="flex flex-col gap-6">
@@ -62,6 +70,7 @@ export default function Create() {
                           id="name"
                           name="name"
                           type="text"
+                          defaultValue={category.name}
                           placeholder="Name..."
                           required
                         />
@@ -78,6 +87,7 @@ export default function Create() {
                           id="description"
                           name="description"
                           type="text"
+                          defaultValue={category.description}
                           placeholder="Description..."
                         />
                         {
@@ -89,13 +99,8 @@ export default function Create() {
                       </div>
                       <div className="flex flex-col gap-3">
                         <Button type="submit" disabled={processing}>
-                          Create
+                          Update
                         </Button>
-                        <Link href={index.url()} prefetch={'click'}>
-                          <Button variant={'secondary'} disabled={processing} className='w-full'>
-                            See categories
-                          </Button>
-                        </Link>
                       </div>
                     </div>
                   </CardContent>

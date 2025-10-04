@@ -4,7 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreCategoryRequest;
 use App\Models\Category;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Number;
 use Inertia\Inertia;
 use Inertia\Response;
 
@@ -60,15 +62,38 @@ class CategoryController extends Controller
      */
     public function edit(string $id)
     {
-        //
+      try {
+        $category = Category::findOrFail($id);
+        return Inertia::render('categories/edit', [
+          'category' => $category
+        ]);
+      } catch (\Throwable $th) {
+        error_log('Error loading category: ' . $th->getMessage());
+        return redirect()
+          ->back()
+          ->with('error', 'It was not possible to load the information.');
+      }
     }
-
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(StoreCategoryRequest $request, string $id)
     {
-        //
+      try {
+        $category = Category::findOrFail($id);
+        $validated = $request->validated();
+        $category->update($validated);
+
+        return redirect()
+          ->route('categories.index')
+          ->with('success', 'Category updated successfully');
+
+      } catch (\Throwable $th) {
+        error_log('Error loading category: ' . $th->getMessage());
+        return redirect()
+          ->back()
+          ->with('error', 'An error occurred while updating the category.');
+      }
     }
 
     /**

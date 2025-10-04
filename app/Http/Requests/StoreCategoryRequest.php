@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Support\Arr;
 
 class StoreCategoryRequest extends FormRequest
 {
@@ -21,19 +22,24 @@ class StoreCategoryRequest extends FormRequest
      */
     public function rules(): array
     {
-        return [
+        $rules = [
           'name' => [
             'required',
-            'unique:categories',
             'max:80',
             'string',
-            'alpha:ascii'
+            'alpha:ascii',
           ],
           'description' => [
             'nullable',
             'max:150'
           ]
         ];
+
+        if($this->isMethod('POST')){
+          array_push($rules['name'], 'unique:categories');
+        }
+
+        return $rules;
     }
 
     public function messages(): array
