@@ -1,4 +1,4 @@
-import { Ban, CircleCheckBig, Info } from "lucide-react";
+import { Ban, CircleCheckBig, Info, MessageCircleQuestion } from "lucide-react";
 import { toast } from "sonner";
 
 const CustomToast = ({
@@ -48,4 +48,22 @@ const info = (
   );
 };
 
-export default { success, error, info };
+const action = (
+  message: string,
+  action: () => void,
+  description?: string,
+  icon?: React.ReactNode
+) => {
+  toast(
+    <CustomToast message={message} description={description} />,
+    {
+      action: {
+        label: 'Delete',
+        onClick: action
+      },
+      icon: icon ?? <MessageCircleQuestion size={20}/>
+    }
+  );
+}
+
+export default { success, error, info, action };

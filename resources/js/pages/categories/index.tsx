@@ -2,7 +2,7 @@ import AppLayout from '@/layouts/app-layout';
 import { type BreadcrumbItem } from '@/types';
 import { Head, usePage } from '@inertiajs/react';
 import { Link } from '@inertiajs/react';
-import { create, edit } from '@/actions/App/Http/Controllers/CategoryController';
+import { create, edit, destroy } from '@/actions/App/Http/Controllers/CategoryController';
 import {
   Table,
   TableBody,
@@ -14,6 +14,7 @@ import {
 import { Button } from '@/components/ui/button';
 import { useEffect } from 'react';
 import toast from '../../lib/toasts';
+import { router } from '@inertiajs/react'
 
 const breadcrumbs: BreadcrumbItem[] = [
   {
@@ -34,8 +35,7 @@ interface Category {
 }
 
 export default function Index({ categories }: {categories: Category[]}) {
-
-  categories.push({id: 10000, name: 'nosedcdwcd', description: 'omar'})
+  // categories.push({id: 10000, name: 'nosedcdwcd', description: 'omar'})
   
   const flash = usePage().props.flash as FlashMessages;
 
@@ -44,9 +44,17 @@ export default function Index({ categories }: {categories: Category[]}) {
       toast.success(flash.success);
     }
     if (flash?.error) {
-      toast.error(flash.error, 'An error occurred');
+      toast.error(flash.error, 'Action not completed');
     }
   }, [flash]);
+
+  const deleteCategory = (id: number) => {
+    toast.action(
+      'Are you sure?',
+      () => { router.delete(destroy(id)) },
+      'The category cannot be recovered'
+    )
+  }
 
   return (
     <AppLayout breadcrumbs={breadcrumbs}>
@@ -80,7 +88,9 @@ export default function Index({ categories }: {categories: Category[]}) {
                     </Button>
                   </Link>
                   
-                  <Button variant={'destructive'}>
+                  <Button 
+                    onClick={() => deleteCategory(category.id)}
+                    variant={'destructive'}>
                     Delete
                   </Button>
                 </div>

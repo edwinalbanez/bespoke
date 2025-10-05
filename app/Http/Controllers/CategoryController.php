@@ -92,7 +92,7 @@ class CategoryController extends Controller
         error_log('Error loading category: ' . $th->getMessage());
         return redirect()
           ->back()
-          ->with('error', 'An error occurred while updating the category.');
+          ->with('error', 'An error occurred while updating');
       }
     }
 
@@ -101,6 +101,17 @@ class CategoryController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        try {
+          $category = Category::findOrFail($id);
+          $category->delete();
+          return redirect()
+            ->back()
+            ->with('success', 'Category removed');
+          
+        } catch (\Throwable $th) {
+          return redirect()
+            ->back()
+            ->with('error', 'An error occurred while deleting');
+        }
     }
 }
