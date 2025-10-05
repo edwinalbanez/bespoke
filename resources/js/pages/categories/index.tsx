@@ -58,15 +58,15 @@ export default function Index({ categories }: {categories: Category[]}) {
 
   return (
     <AppLayout breadcrumbs={breadcrumbs}>
-      <Head title="Dashboard" />
+      <Head title="Categories" />
       <div className="flex flex-col h-full gap-4 rounded-xl p-5">
       <Link href={create()}>
-        <Button className='w-fit'>
+        <Button className='w-fit text-base'>
           New category
         </Button>
       </Link>
       <Table>
-        <TableHeader>
+        <TableHeader className='font-bold text-base'>
           <TableRow>
             <TableHead className="w-[100px]">Name</TableHead>
             <TableHead>Description</TableHead>
