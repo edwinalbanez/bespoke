@@ -1,7 +1,13 @@
 import { Ban, CircleCheckBig, Info } from "lucide-react";
 import { toast } from "sonner";
 
-const CustomToast = ({ message, description }: { message: string, description?: string }) =>
+const CustomToast = ({
+  message,
+  description
+}: {
+  message: string,
+  description?: string
+}) =>
   <div>
     <p className='text-base'>
       {message}

@@ -6,7 +6,7 @@ import { Form } from '@inertiajs/react';
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from '@/components/ui/button';
-import { toast } from "sonner"
+import toast from "../../lib/toasts"
 import { useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 
@@ -35,7 +35,7 @@ export default function Create() {
       toast.success(flash.success);
     }
     if (flash?.error) {
-      toast.error(flash.error);
+      toast.error(flash.error, 'An error occurred');
     }
   }, [flash]);
 

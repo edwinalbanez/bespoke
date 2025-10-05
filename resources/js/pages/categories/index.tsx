@@ -13,7 +13,7 @@ import {
 } from "@/components/ui/table"
 import { Button } from '@/components/ui/button';
 import { useEffect } from 'react';
-import showToast from '../../lib/toasts';
+import toast from '../../lib/toasts';
 
 const breadcrumbs: BreadcrumbItem[] = [
   {
@@ -41,10 +41,10 @@ export default function Index({ categories }: {categories: Category[]}) {
 
   useEffect(() => {
     if (flash?.success) {
-      showToast.success(flash.success);
+      toast.success(flash.success);
     }
     if (flash?.error) {
-      showToast.error(flash.error, 'An error ocurred');
+      toast.error(flash.error, 'An error occurred');
     }
   }, [flash]);
 
