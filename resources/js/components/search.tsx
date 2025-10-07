@@ -10,7 +10,7 @@ export default function Search({
 }) {
 
   return(
-    <div className="grid gap-3">
+    <div className="grid gap-3 w-md">
       <Input
         {...props}
         onChange={onChange}

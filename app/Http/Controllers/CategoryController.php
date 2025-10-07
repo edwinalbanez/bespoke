@@ -19,7 +19,7 @@ class CategoryController extends Controller
         return Inertia::render('categories/index', [
           'categories' => Inertia::scroll(fn () => 
             Category::where('name', 'like', '%'.$filter.'%')
-              ->paginate(20)
+              ->paginate(50)
           )
         ]);
     }

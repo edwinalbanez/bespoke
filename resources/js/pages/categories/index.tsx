@@ -71,17 +71,17 @@ export default function Index({ categories }: {categories: PaginatedCategories})
   }
 
   const fetchWithFilter = useDebouncedCallback((event: React.ChangeEvent<HTMLInputElement>) => {
-    const filterValue = event.target.value;
+    const filter = event.target.value;
     router.get(
       '/categories',
-      filterValue ? { filter: filterValue } : {},
+      filter ? { filter } : {},
       {
         reset: ['categories'],
         only: ['categories'],
         preserveState: true,
       }
     )
-  }, 500)
+  }, 800)
 
   console.log(categories.links);
   
@@ -89,13 +89,17 @@ export default function Index({ categories }: {categories: PaginatedCategories})
     <AppLayout breadcrumbs={breadcrumbs}>
       <Head title="Categories" />
       <div className="flex flex-col h-full gap-4 rounded-xl p-5">
-      <Search onChange={fetchWithFilter} ref={filterRef} />
-      <Button 
-        className='w-fit text-base'
-        onClick={() => router.visit(create())}
-      >
-        New category
-      </Button>
+
+      <div className='flex gap-5'>
+        <Search onChange={fetchWithFilter} ref={filterRef} type='search' />
+        <Button 
+          className='w-fit text-base'
+          onClick={() => router.visit(create())}
+        >
+          New category
+        </Button>
+      </div>
+  
       <InfiniteScroll data='categories' manual >
           <Table>
             <TableHeader className='font-bold text-base'>

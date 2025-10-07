@@ -2,32 +2,60 @@ import { router } from "@inertiajs/react"
 import { Button } from "./ui/button"
 import { ChevronLeft, ChevronRight } from "lucide-react"
 
-interface Links { 
+interface Link { 
   url: string | null, 
   label: string, 
   page: number, 
   active: boolean
 }
 
-export default function Pagination({ links, filter }: { links: Links[], filter?: string}) {
+export default function Pagination({ links, filter }: { links: Link[], filter?: string}) {
   
+  const handleNavigation = (url: string | null) => {
+    if (!url) return
+
+    router.get(
+      url,
+      filter ? { filter } : {},
+      { preserveState: true }
+    )
+  }
+
+  const renderLabel = (label: string) => {
+    if (label.includes('Previous')) {
+      return (
+        <>
+          <ChevronLeft className="h-4 w-4" />
+          <span className="sr-only">Anterior</span>
+        </>
+      )
+    }
+
+    if (label.includes('Next')) {
+      return (
+        <>
+          <ChevronRight className="h-4 w-4" />
+          <span className="sr-only">Siguiente</span>
+        </>
+      )
+    }
+
+    return label;
+  }
+
+
   return (
     <div className="flex items-center justify-center gap-2">
       {links.map(link => 
         <Button
           key={link.label}
           variant={link.active ? 'default' : 'secondary'}
-          onClick={() => router.get(
-            link.url ?? '',
-            filter ? { filter } : {},
-            { preserveState: true }
-          )}
+          onClick={() => handleNavigation(link.url)}
         >
-          {link.label.includes('Previous') && <ChevronLeft />}
-          {link.label.includes('Next') && <ChevronRight />}
-          {link.label.length === 1 && link.label}
+          {renderLabel(link.label)}
         </Button>
       )}
     </div>
   )
 }
+
