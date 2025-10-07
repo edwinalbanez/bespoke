@@ -6,6 +6,7 @@ import {
   Table,
   TableBody,
   TableCell,
+  TableFooter,
   TableHead,
   TableHeader,
   TableRow,
@@ -16,6 +17,7 @@ import toast from '../../lib/toasts';
 import Search from '@/components/search';
 import Pagination from '@/components/pagination';
 import { useDebouncedCallback } from 'use-debounce';
+import generatePagination from '@/lib/generate-pagination';
 
 const breadcrumbs: BreadcrumbItem[] = [
   {
@@ -84,6 +86,8 @@ export default function Index({ categories }: {categories: PaginatedCategories})
   }, 800)
 
   console.log(categories.links);
+  const pages = generatePagination(categories.links);
+  console.log(pages);
   
   return (
     <AppLayout breadcrumbs={breadcrumbs}>
@@ -137,12 +141,18 @@ export default function Index({ categories }: {categories: PaginatedCategories})
                 </TableRow>
               ))}
             </TableBody>
+            <TableFooter>
+              <TableRow>
+                <TableCell>
+                  <Pagination
+                    links={pages.filter((link): link is Links => link !== undefined)}
+                    filter={filterRef.current?.value ?? ''}
+                  />
+                </TableCell>
+              </TableRow>
+            </TableFooter>
           </Table>
       </InfiniteScroll>
-      <Pagination 
-        links={categories.links} 
-        filter={filterRef.current?.value ?? ''}
-      />
       </div>
     </AppLayout>
   );

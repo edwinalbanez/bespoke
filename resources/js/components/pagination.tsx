@@ -45,15 +45,30 @@ export default function Pagination({ links, filter }: { links: Link[], filter?: 
 
 
   return (
-    <div className="flex items-center justify-center gap-2">
-      {links.map(link => 
-        <Button
-          key={link.label}
-          variant={link.active ? 'default' : 'secondary'}
-          onClick={() => handleNavigation(link.url)}
-        >
-          {renderLabel(link.label)}
-        </Button>
+    <div className="flex items-center justify-center gap-2 mx-auto">
+      {links.map(link => {
+
+        if (link.active) {
+          return(
+            <Button
+              key={link.label + link.page}
+              variant={link.active ? 'default' : 'secondary'}
+            >
+              {renderLabel(link.label)}
+            </Button>
+          )
+        }
+
+        return(
+          <Button
+            key={link.label + link.page}
+            variant={link.active ? 'default' : 'secondary'}
+            onClick={() => handleNavigation(link.url)}
+          >
+            {renderLabel(link.label)}
+          </Button>
+        )
+      }
       )}
     </div>
   )
