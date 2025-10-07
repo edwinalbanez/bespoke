@@ -10,7 +10,6 @@ import toast from "../../lib/toasts"
 import { useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 
-
 const breadcrumbs: BreadcrumbItem[] = [
   {
     title: 'Categories',
@@ -74,12 +73,11 @@ export default function Edit({ category }: { category: Category}) {
                           placeholder="Name..."
                           required
                         />
-                        {
-                          errors.name && 
+                        {errors.name && 
                             <div className='text-red-600 italic'>
                               *{errors.name}
-                            </div>
-                        }
+                            </div>}
+
                       </div>
                       <div className="grid gap-3">
                         <Label htmlFor="description">Description</Label>
@@ -90,12 +88,11 @@ export default function Edit({ category }: { category: Category}) {
                           defaultValue={category.description}
                           placeholder="Description..."
                         />
-                        {
-                          errors.description && 
+                        {errors.description && 
                             <div className='text-red-600 italic'>
                               *{errors.description}
-                            </div>
-                        }
+                            </div>}
+
                       </div>
                       <div className="flex flex-col gap-3">
                         <Button type="submit" disabled={processing}>

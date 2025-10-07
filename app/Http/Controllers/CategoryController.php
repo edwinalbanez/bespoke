@@ -4,18 +4,23 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreCategoryRequest;
 use App\Models\Category;
+use Illuminate\Http\Request;
 use Inertia\Inertia;
-// use Inertia\Response;
 
 class CategoryController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
+        $filter = $request->input('filter', '');
+
         return Inertia::render('categories/index', [
-          'categories' => Inertia::scroCategory::all()
+          'categories' => Inertia::scroll(fn () => 
+            Category::where('name', 'like', '%'.$filter.'%')
+              ->paginate(20)
+          )
         ]);
     }
 
