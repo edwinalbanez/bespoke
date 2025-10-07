@@ -83,7 +83,7 @@ export default function Index({ categories }: {categories: PaginatedCategories})
     )
   }, 500)
 
-  console.log(categories);
+  console.log(categories.links);
   
   return (
     <AppLayout breadcrumbs={breadcrumbs}>
@@ -135,7 +135,10 @@ export default function Index({ categories }: {categories: PaginatedCategories})
             </TableBody>
           </Table>
       </InfiniteScroll>
-      <Pagination links={categories.links} filter={filterRef.current?.value ?? ''}  />
+      <Pagination 
+        links={categories.links} 
+        filter={filterRef.current?.value ?? ''}
+      />
       </div>
     </AppLayout>
   );
