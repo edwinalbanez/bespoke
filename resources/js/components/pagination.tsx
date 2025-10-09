@@ -1,25 +1,21 @@
-import { router } from "@inertiajs/react"
+// import { router } from "@inertiajs/react"
 import { Button } from "./ui/button"
 import { ChevronLeft, ChevronRight } from "lucide-react"
+import { Link } from "@/types"
 
-interface Link { 
-  url: string | null, 
-  label: string, 
-  page: number, 
-  active: boolean
-}
-
-export default function Pagination({ links, filter }: { links: Link[], filter?: string}) {
+export default function Pagination({ links }: { links: Link[]}) {
   
-  const handleNavigation = (url: string | null) => {
-    if (!url) return
+  // const handleNavigation = (url: string | null) => {
+  //   if (!url) return
 
-    router.get(
-      url,
-      filter ? { filter } : {},
-      { preserveState: true }
-    )
-  }
+  //   router.get(
+  //     url,
+  //     filter ? { filter } : {},
+  //     { preserveState: true }
+  //   )
+  // }
+
+  
 
   const renderLabel = (label: string) => {
     if (label.includes('Previous')) {
@@ -46,29 +42,15 @@ export default function Pagination({ links, filter }: { links: Link[], filter?: 
 
   return (
     <div className="flex items-center justify-center gap-2 mx-auto">
-      {links.map(link => {
-
-        if (link.active) {
-          return(
-            <Button
-              key={link.label + link.page}
-              variant={link.active ? 'default' : 'secondary'}
-            >
-              {renderLabel(link.label)}
-            </Button>
-          )
-        }
-
-        return(
-          <Button
-            key={link.label + link.page}
-            variant={link.active ? 'default' : 'secondary'}
-            onClick={() => handleNavigation(link.url)}
-          >
-            {renderLabel(link.label)}
-          </Button>
-        )
-      }
+      {links.map(link => 
+        <Button
+          key={link.label + link.page}
+          variant={link.active ? 'default' : 'secondary'}
+          onClick={link.click}
+          // onClick={() => handleNavigation(link.url)}
+        >
+          {renderLabel(link.label)}
+        </Button>
       )}
     </div>
   )

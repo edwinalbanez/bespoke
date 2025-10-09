@@ -1,7 +1,7 @@
 import AppLayout from '@/layouts/app-layout';
-import { type BreadcrumbItem } from '@/types';
-import { Head, usePage, Link, InfiniteScroll, router } from '@inertiajs/react';
+import { Head, usePage, InfiniteScroll, router } from '@inertiajs/react';
 import { create, edit, destroy } from '@/actions/App/Http/Controllers/CategoryController';
+import { type BreadcrumbItem, Link, FlashMessages } from '@/types';
 import {
   Table,
   TableBody,
@@ -26,27 +26,15 @@ const breadcrumbs: BreadcrumbItem[] = [
   },
 ];
 
-interface FlashMessages {
-  success?: string;
-  error?: string;
-}
-
 interface Category {
   id: number,
   name: string,
   description: string | null
 }
 
-interface Links {
-  url: string | null,
-  label: string,
-  page: number,
-  active: boolean
-}
-
 interface PaginatedCategories {
   data: Category[],
-  links: Links[]
+  links: Link[]
 }
 
 export default function Index({ categories }: {categories: PaginatedCategories}) {
@@ -61,8 +49,10 @@ export default function Index({ categories }: {categories: PaginatedCategories})
       toast.error(flash.error, 'Action not completed');
     }
   }, [flash]);
-
-  const filterRef = useRef<HTMLInputElement>(null);
+  
+  const { url } = usePage();
+  const searchParams = new URLSearchParams(url.split('?')[1]);
+  const filter = useRef(searchParams.get('filter'));
 
   const deleteCategory = (id: number) => {
     toast.action(
@@ -70,6 +60,20 @@ export default function Index({ categories }: {categories: PaginatedCategories})
       () => { router.delete(destroy(id)) },
       'The category cannot be recovered'
     )
+  }
+
+  const handleNavigation = (
+    url: string | null, 
+    filter?: string | null
+  ) => {
+
+    if (!url) return
+    
+    router.get(
+      url,
+      filter ? { filter } : {},
+      { preserveState: true }
+    );
   }
 
   const fetchWithFilter = useDebouncedCallback((event: React.ChangeEvent<HTMLInputElement>) => {
@@ -85,9 +89,12 @@ export default function Index({ categories }: {categories: PaginatedCategories})
     )
   }, 800)
 
-  console.log(categories.links);
   const pages = generatePagination(categories.links);
-  console.log(pages);
+  pages.forEach(page => {
+    if (page) {
+      page.click = () => handleNavigation(page.url, filter.current)
+    }
+  })
   
   return (
     <AppLayout breadcrumbs={breadcrumbs}>
@@ -95,7 +102,10 @@ export default function Index({ categories }: {categories: PaginatedCategories})
       <div className="flex flex-col h-full gap-4 rounded-xl p-5">
 
       <div className='flex gap-5'>
-        <Search onChange={fetchWithFilter} ref={filterRef} type='search' />
+        <Search 
+          onChange={fetchWithFilter}
+          defaultValue={filter.current ?? ''}
+          type='search' />
         <Button 
           className='w-fit text-base'
           onClick={() => router.visit(create())}
@@ -122,10 +132,6 @@ export default function Index({ categories }: {categories: PaginatedCategories})
                   </TableCell>
                   <TableCell className="font-medium">
                     <div className='flex gap-3'>
-                      <Link href={edit(category.id)}>
-                        
-                      </Link>
-
                       <Button
                         onClick={() => router.visit(edit(category.id))}>
                         Edit
@@ -145,8 +151,7 @@ export default function Index({ categories }: {categories: PaginatedCategories})
               <TableRow>
                 <TableCell>
                   <Pagination
-                    links={pages.filter((link): link is Links => link !== undefined)}
-                    filter={filterRef.current?.value ?? ''}
+                    links={pages}
                   />
                 </TableCell>
               </TableRow>

@@ -41,3 +41,16 @@ export interface User {
     updated_at: string;
     [key: string]: unknown; // This allows for additional properties...
 }
+
+export interface Link {
+  url: string | null,
+  click?: () => void,
+  label: string,
+  page: number,
+  active: boolean
+}
+
+export interface FlashMessages {
+  success?: string;
+  error?: string;
+}

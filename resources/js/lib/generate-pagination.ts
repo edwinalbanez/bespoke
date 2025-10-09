@@ -1,9 +1,4 @@
-interface Link {
-  url: string | null,
-  label: string,
-  page: number,
-  active: boolean
-}
+import { Link } from "@/types";
 
 const getCurrentPage = (links: Link[]) => {
   const activePage = links.find(link => link.active);
@@ -60,12 +55,14 @@ const generatePagination = (urls: Link[]) => {
       )
     }
   }
+
+
   
   //add the "previous" and "next" links
   pages.unshift(previousLink);
   pages.push(nextLink);
 
-  return pages;
+  return pages.filter(page => page !== undefined);
 };
 
 export default generatePagination
