@@ -52,7 +52,8 @@ export default function Index({ categories }: {categories: PaginatedCategories})
   
   const { url } = usePage();
   const searchParams = new URLSearchParams(url.split('?')[1]);
-  const filter = useRef(searchParams.get('filter'));
+  // const filter = useRef(searchParams.get('filter'));
+  const filter = searchParams.get('filter');
 
   const deleteCategory = (id: number) => {
     toast.action(
@@ -60,20 +61,6 @@ export default function Index({ categories }: {categories: PaginatedCategories})
       () => { router.delete(destroy(id)) },
       'The category cannot be recovered'
     )
-  }
-
-  const handleNavigation = (
-    url: string | null, 
-    filter?: string | null
-  ) => {
-
-    if (!url) return
-    
-    router.get(
-      url,
-      filter ? { filter } : {},
-      { preserveState: true }
-    );
   }
 
   const fetchWithFilter = useDebouncedCallback((event: React.ChangeEvent<HTMLInputElement>) => {
@@ -87,12 +74,49 @@ export default function Index({ categories }: {categories: PaginatedCategories})
         preserveState: true,
       }
     )
-  }, 800)
+  }, 800);
 
-  const pages = generatePagination(categories.links);
-  pages.forEach(page => {
-    if (page) {
-      page.click = () => handleNavigation(page.url, filter.current)
+  // const handleNavigation = (
+  //   link: Link,
+  //   filter?: string | null
+  // ) => {
+
+  //   if (!link.url || link.active) return
+
+  //   router.get(
+  //     url,
+  //     filter ? { filter } : {},
+  //     { preserveState: true }
+  //   );
+  // }
+
+  console.log(filter);
+  console.log(searchParams.get('filter'));
+  
+
+  const handleNavigation = (
+    link: Link,
+    query?: object
+  ) => {
+
+    if (!link.url || link.active) return
+
+    const emptyQuery = Object.keys(query ?? {}).length === 0;
+
+    router.get(
+      link.url,
+      emptyQuery ? {} : {...query},
+      { preserveState: true }
+    );
+  }
+
+  const links = generatePagination(categories.links);
+  
+  links.forEach(link => {
+    console.log(filter);
+    
+    if (link) {
+      link.click = () => handleNavigation(link, { filter: filter})
     }
   })
   
@@ -104,7 +128,7 @@ export default function Index({ categories }: {categories: PaginatedCategories})
       <div className='flex gap-5'>
         <Search 
           onChange={fetchWithFilter}
-          defaultValue={filter.current ?? ''}
+          defaultValue={filter ?? ''}
           type='search' />
         <Button 
           className='w-fit text-base'
@@ -151,7 +175,7 @@ export default function Index({ categories }: {categories: PaginatedCategories})
               <TableRow>
                 <TableCell>
                   <Pagination
-                    links={pages}
+                    links={links}
                   />
                 </TableCell>
               </TableRow>

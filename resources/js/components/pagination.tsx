@@ -4,18 +4,6 @@ import { ChevronLeft, ChevronRight } from "lucide-react"
 import { Link } from "@/types"
 
 export default function Pagination({ links }: { links: Link[]}) {
-  
-  // const handleNavigation = (url: string | null) => {
-  //   if (!url) return
-
-  //   router.get(
-  //     url,
-  //     filter ? { filter } : {},
-  //     { preserveState: true }
-  //   )
-  // }
-
-  
 
   const renderLabel = (label: string) => {
     if (label.includes('Previous')) {
@@ -38,7 +26,6 @@ export default function Pagination({ links }: { links: Link[]}) {
 
     return label;
   }
-
 
   return (
     <div className="flex items-center justify-center gap-2 mx-auto">

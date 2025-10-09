@@ -56,8 +56,6 @@ const generatePagination = (urls: Link[]) => {
     }
   }
 
-
-  
   //add the "previous" and "next" links
   pages.unshift(previousLink);
   pages.push(nextLink);
