@@ -12,7 +12,7 @@ import {
   TableRow,
 } from "@/components/ui/table"
 import { Button } from '@/components/ui/button';
-import { useEffect, useRef } from 'react';
+import { useEffect } from 'react';
 import toast from '../../lib/toasts';
 import Search from '@/components/search';
 import Pagination from '@/components/pagination';
@@ -52,7 +52,6 @@ export default function Index({ categories }: {categories: PaginatedCategories})
   
   const { url } = usePage();
   const searchParams = new URLSearchParams(url.split('?')[1]);
-  // const filter = useRef(searchParams.get('filter'));
   const filter = searchParams.get('filter');
 
   const deleteCategory = (id: number) => {
@@ -92,6 +91,12 @@ export default function Index({ categories }: {categories: PaginatedCategories})
 
   console.log(filter);
   console.log(searchParams.get('filter'));
+
+  const keysWithValue = (object: object) => {
+    const keys = Object.keys(object);
+
+    if (keys.length === 0) return {};
+  }
   
 
   const handleNavigation = (
@@ -100,6 +105,7 @@ export default function Index({ categories }: {categories: PaginatedCategories})
   ) => {
 
     if (!link.url || link.active) return
+
 
     const emptyQuery = Object.keys(query ?? {}).length === 0;
 
