@@ -92,12 +92,28 @@ export default function Index({ categories }: {categories: PaginatedCategories})
   console.log(filter);
   console.log(searchParams.get('filter'));
 
-  const keysWithValue = (object: object) => {
-    const keys = Object.keys(object);
+  const getValidData = (object: object) => {
+    // const entries = Object.entries(object);
+    // console.log("entries", entries);
 
-    if (keys.length === 0) return {};
+    // const filteredEntries = entries.filter(([, value]) => {
+    //   if (value !== null) {
+    //     console.log("value", value);
+    //     return true;
+    //   }
+    // });
+
+    // console.log("filtered", filteredEntries);
+    
+
+    // const query = Object.fromEntries(filteredEntries);
+    // return query;
+    
+    return Object.fromEntries(
+      Object.entries(object)
+      .filter(([, value]) => value !== null || value !== undefined)
+    );
   }
-  
 
   const handleNavigation = (
     link: Link,
@@ -105,13 +121,11 @@ export default function Index({ categories }: {categories: PaginatedCategories})
   ) => {
 
     if (!link.url || link.active) return
-
-
-    const emptyQuery = Object.keys(query ?? {}).length === 0;
+    const data = getValidData({...query});
 
     router.get(
       link.url,
-      emptyQuery ? {} : {...query},
+      data,
       { preserveState: true }
     );
   }
@@ -119,10 +133,10 @@ export default function Index({ categories }: {categories: PaginatedCategories})
   const links = generatePagination(categories.links);
   
   links.forEach(link => {
-    console.log(filter);
+    // console.log(filter);
     
     if (link) {
-      link.click = () => handleNavigation(link, { filter: filter})
+      link.click = () => handleNavigation(link, filter ? { filter: filter} : {})
     }
   })
   

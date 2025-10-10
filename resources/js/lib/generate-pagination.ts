@@ -52,7 +52,7 @@ const generatePagination = (urls: Link[]) => {
         getLink(currentPage+1),
         getLink(currentPage+2, '...'),
         getLink(totalPages)
-      )
+      );
     }
   }
 
