@@ -34,7 +34,6 @@ export default function Pagination({ links }: { links: Link[]}) {
           key={link.label + link.page}
           variant={link.active ? 'default' : 'secondary'}
           onClick={link.click}
-          // onClick={() => handleNavigation(link.url)}
         >
           {renderLabel(link.label)}
         </Button>

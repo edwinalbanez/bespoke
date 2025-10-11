@@ -1,30 +1,54 @@
 import { Link } from "@/types";
+import { router } from "@inertiajs/react";
+
+const getValidData = (object: object) => {
+  return Object.fromEntries(
+    Object.entries(object)
+      .filter(([, value]) =>
+         (value !== null && value !== undefined && value !== '')
+      )
+  );
+}
+
+const handleNavigation = (
+  link: Link,
+  query: object = {}
+) => {
+  
+  if (!link.url || link.active) return
+  const data = getValidData(query);
+
+  router.get(
+    link.url,
+    data,
+    { preserveState: true }
+  );
+}
 
 const getCurrentPage = (links: Link[]) => {
   const activePage = links.find(link => link.active);
   return activePage ? activePage.page : 1;
 };
 
-const generatePagination = (urls: Link[]) => {
+
+const generatePagination = (urls: Link[], data: object = {}) => {
 
   const links = structuredClone(urls); 
+
+  const getLink = (page: number, label?: string) => {
+    const link = links.find(link => link.page === page);
+    if (link) {
+      link.label = label ? label : link.label;
+    }
+    return link;
+  }
 
   //remove the "previous" and "next" links
   const previousLink = links.shift();
   const nextLink = links.pop();
-  
-  const getLink = (page: number, label?: string) => {
-    const link = links.find(link => link.page === page);
-
-    if (link) {
-      link.label = label ? label : link.label;
-    }
-
-    return link;
-  }
 
   const currentPage = getCurrentPage(links);
-  const totalPages = links.length; //excluding the "previous" and "next" links
+  const totalPages = links.length;
   const pages = [];
   if (totalPages <= 5) {
     // Show all pages
@@ -59,6 +83,13 @@ const generatePagination = (urls: Link[]) => {
   //add the "previous" and "next" links
   pages.unshift(previousLink);
   pages.push(nextLink);
+
+  const queryData = getValidData(data);
+  pages.forEach(page => {    
+    if (page) { 
+      page.click = () => handleNavigation(page, queryData)
+    }
+  })
 
   return pages.filter(page => page !== undefined);
 };

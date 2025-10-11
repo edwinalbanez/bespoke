@@ -62,83 +62,23 @@ export default function Index({ categories }: {categories: PaginatedCategories})
     )
   }
 
-  const fetchWithFilter = useDebouncedCallback((event: React.ChangeEvent<HTMLInputElement>) => {
-    const filter = event.target.value;
-    router.get(
-      '/categories',
-      filter ? { filter } : {},
-      {
-        reset: ['categories'],
-        only: ['categories'],
-        preserveState: true,
-      }
-    )
+  const fetchWithFilter = useDebouncedCallback(
+    (event: React.ChangeEvent<HTMLInputElement>) => {
+      const filter = event.target.value.trim();
+      router.get(
+        '/categories',
+        filter ? { filter } : {},
+        {
+          reset: ['categories'],
+          only: ['categories'],
+          preserveState: true,
+        }
+      )
   }, 800);
 
-  // const handleNavigation = (
-  //   link: Link,
-  //   filter?: string | null
-  // ) => {
-
-  //   if (!link.url || link.active) return
-
-  //   router.get(
-  //     url,
-  //     filter ? { filter } : {},
-  //     { preserveState: true }
-  //   );
-  // }
-
-  console.log(filter);
-  console.log(searchParams.get('filter'));
-
-  const getValidData = (object: object) => {
-    // const entries = Object.entries(object);
-    // console.log("entries", entries);
-
-    // const filteredEntries = entries.filter(([, value]) => {
-    //   if (value !== null) {
-    //     console.log("value", value);
-    //     return true;
-    //   }
-    // });
-
-    // console.log("filtered", filteredEntries);
-    
-
-    // const query = Object.fromEntries(filteredEntries);
-    // return query;
-    
-    return Object.fromEntries(
-      Object.entries(object)
-      .filter(([, value]) => value !== null || value !== undefined)
-    );
-  }
-
-  const handleNavigation = (
-    link: Link,
-    query?: object
-  ) => {
-
-    if (!link.url || link.active) return
-    const data = getValidData({...query});
-
-    router.get(
-      link.url,
-      data,
-      { preserveState: true }
-    );
-  }
-
-  const links = generatePagination(categories.links);
+  const links = generatePagination(categories.links, { filter });
   
-  links.forEach(link => {
-    // console.log(filter);
-    
-    if (link) {
-      link.click = () => handleNavigation(link, filter ? { filter: filter} : {})
-    }
-  })
+  console.log(links);
   
   return (
     <AppLayout breadcrumbs={breadcrumbs}>
@@ -191,12 +131,10 @@ export default function Index({ categories }: {categories: PaginatedCategories})
                 </TableRow>
               ))}
             </TableBody>
-            <TableFooter>
-              <TableRow>
-                <TableCell>
-                  <Pagination
-                    links={links}
-                  />
+            <TableFooter className='bg-transparent'>
+              <TableRow className='hover:bg-transparent'>
+                <TableCell colSpan={3}>
+                  <Pagination links={links}/>
                 </TableCell>
               </TableRow>
             </TableFooter>
