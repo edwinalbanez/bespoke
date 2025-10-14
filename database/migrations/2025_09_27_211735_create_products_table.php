@@ -18,7 +18,7 @@ return new class extends Migration
             $table->string('model', 50)->nullable();
             $table->integer('sale_price');
             $table->integer('purchase_price');
-            $table->string('image', 150);
+            $table->string('image', 150)->nullable();
             $table->foreignId('category_id')->constrained('categories');
             $table->foreignId('brand_id')->constrained('brands');
             $table->timestamps();

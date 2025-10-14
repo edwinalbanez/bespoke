@@ -78,8 +78,6 @@ export default function Index({ categories }: {categories: PaginatedCategories})
 
   const links = generatePagination(categories.links, { filter });
   
-  console.log(links);
-  
   return (
     <AppLayout breadcrumbs={breadcrumbs}>
       <Head title="Categories" />
